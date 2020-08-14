@@ -5,6 +5,113 @@
 #include <iostream>
 #include <vector>
 
+class BinaryHeap{
+    //Binary Heap for integers
+public:
+    int length; //number of elements actually in the heap
+    int heapsize; //number of possible elements in the heap
+    int container[]; //the container of the binary heap
+
+    BinaryHeap(int size){
+        heapsize = size;
+        container [size];
+        length = 0;
+    }
+
+    int parent(int i){
+        return i/2;
+    }
+
+    int left(int i){
+        return 2*i;
+    }
+    int right(int i){
+        return 2*i+1;
+    }
+
+    void max_heapify(int i){
+        //Assumes that LEft(i) and Right(i) are max heaps
+        int l = left(i);
+        int r = right(i);
+        int largest;
+        if(l<= heapsize && container[l]>container[i]){
+            largest = l;
+        }
+        else{
+            largest = i;
+        }
+        if(r<= heapsize && container[r] >container[largest]){
+            largest = r;
+        }
+        if(largest != i){
+            int temp = container[i];
+            container[i] = container[largest];
+            container[largest] = temp;
+            max_heapify(largest);
+        }
+    }
+
+    void min_heapify(int i){
+        //Assumes that Left(i) an Right(i) are min heaps
+        int l = left(i);
+        int r = right(i);
+        int smallest;
+        if(l <= heapsize && container[l] < container[i]){
+            smallest = l;
+        }
+        else{
+            smallest = i;
+        }
+        if(r<= heapsize && container[r] < container[smallest]){
+            smallest = r;
+        }
+        if(smallest != i){
+            int temp = container[i];
+            container[i] = container[smallest];
+            container[smallest] = temp;
+            min_heapify(smallest);
+        }
+    }
+    void BuildMaxHeap(int A[]){
+        // builds an Heap using an integer array
+        heapsize = sizeof(A)/sizeof(A[0]);
+        for(int i = 0; i < heapsize; i++){
+            container[i] = A[i];
+            length ++;
+        }
+        for(int i = heapsize/2;i>1;i--){
+            max_heapify(i);
+        }
+    }
+
+    void BuildMinHeao(int A[]){
+        //builds a Heap using an integer array
+        heapsize = sizeof(A)/sizeof(A[0]);
+        for(int i = 0; i <heapsize; i++){
+            container[i] = A[i];
+            length++;
+        }
+        for(int i = heapsize; i>1; i--){
+            min_heapify(i);
+        }
+    }
+};
+
+int * heapsort(int A[]){
+    //TODO might not be correct
+    int length = sizeof(A)/sizeof(A[0]);
+
+    BinaryHeap heap = BinaryHeap(length);
+    heap.BuildMaxHeap(A);
+    return heap.container;
+}
+int *min_heapsort(int A[]){
+    int length = sizeof(A)/sizeof(A[0]);
+    BinaryHeap heap = BinaryHeap(length);
+    heap.BuildMinHeao(A);
+    return heap.container;
+}
+
 int binary_search(std::vector<int> input, int value, int pivot){
     // Assumes the input vector is sorted in ascending order
     // Search for value in input vector
